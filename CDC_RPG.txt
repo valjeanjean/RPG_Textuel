@@ -1,0 +1,20 @@
+Jeu suite de questions/réponses
+Possibilité d'ajouts et de modifications de quêtes
+Sauvegarde de l'inventaire se fait dans un fichier nommé "inventaire.save"
+Quand le joueur atteint 0 points de vie, fin de jeu.
+initiative = si le joueur attaque l'ennemi en premier.
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+Idées jeu : 
+
+Proposer une liste de personnages jouables
+
+
+
