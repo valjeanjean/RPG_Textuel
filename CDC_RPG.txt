@@ -4,7 +4,10 @@ Sauvegarde de l'inventaire se fait dans un fichier nommé "inventaire.save"
 Quand le joueur atteint 0 points de vie, fin de jeu.
 initiative = si le joueur attaque l'ennemi en premier.
 
-
+L'utilisateur peut rajouter des "énigmes", il doit donc ajouter une question/énigme ainsi que sa réponse.
+Labyrinthe ou l'utilisateur choisi ou aller et peut rencontrer des monstres grâce à un aléatoire? Entre 1 & 4 par ex, if(random == 4) alors
+apparition d'un monstre et combat ?
+Également aléatoire sur l'apparition des énigmes ? Quelles récompenses pour bonne réponse énigme & victoire après combat ?
 
 
 
