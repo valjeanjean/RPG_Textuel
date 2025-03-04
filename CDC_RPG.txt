@@ -1,16 +1,20 @@
-Jeu suite de questions/réponses
-Possibilité d'ajouts et de modifications de quêtes
-Sauvegarde de l'inventaire se fait dans un fichier nommé "inventaire.save"
-Quand le joueur atteint 0 points de vie, fin de jeu.
-initiative = si le joueur attaque l'ennemi en premier.
+AJOUT/MODIFICATION QUÊTES DANS UN FICHIER ANNEXE : NON (AJOUTER QUÊTES DANS LE FICHIER AINSI QUE RÉPONSES ET LIER ÇA À L'ALÉATOIRE)
 
-L'utilisateur peut rajouter des "énigmes", il doit donc ajouter une question/énigme ainsi que sa réponse.
-Labyrinthe ou l'utilisateur choisi ou aller et peut rencontrer des monstres grâce à un aléatoire? Entre 1 & 4 par ex, if(random == 4) alors
-apparition d'un monstre et combat ?
-Également aléatoire sur l'apparition des énigmes ? Quelles récompenses pour bonne réponse énigme & victoire après combat ?
+STATISTIQUES DU/DES PERSONNAGES STOCKÉ DANS FICHIER ANNEXE : FONCTIONNEL
 
+SI LE JOUEUR ATTEINT 0 PV, GAME OVER : FONCTIONNEL
 
+SI LE JOUEUR ATTEINT 1000 PIÈCES, GAME OVER : FONCTIONNEL
 
+UTILISER SYSTEM CLEAR POUR EFFACER L'ÉCRAN A CHAQUE TOUR : NON
+
+SI LE JOUEUR ATTEINT 0 PIÈCE D'OR, MALUS -1 HP, -1 STAMINA : FONCTION FAITE, MANQUE LIAISON DANS LE CODE
+
+SI LE JOUEUR ATTEINT 0 DE STAMINA, MALUS -1HP PAR TOUR : FONCTION FAITE, MANQUE LIAISON DANS LE CODE
+
+POSSIBILITÉ DE JOUER A 2 PAR ALTERNANCE : NON (PRENDRE EXEMPLE SUR LA FONCTIONNALITÉ DÉVELOPPÉE DANS SHIFUMI)
+
+DEUX JOUEURS PEUVENT JOUER ENSEMBLE SUR UN MÊME ÉVÈNEMENT : NON
 
 
 -----------------------------------------------------------------------------------
@@ -19,5 +23,12 @@ Idées jeu :
 
 Proposer une liste de personnages jouables
 
+3 choix qui spawn de manière aléatoire :
+
+    - Énigme (Peut donner des récompenses)
+    - PvE
+    - Objets qui augmente les stats
 
 
+But du rpg c'est de faire en sorte que le client (celui qui nous achète le jeu et non le joueur qui jouera au jeu) puisse modifier
+certaines choses, comme le nombre de PV, stamina ou les pièces qu'on gagne avec les récompenses des différentes missions.
