@@ -24,6 +24,24 @@ struct player{
 
 };
 
+struct malus{
+
+    int pv;
+    int stamina;
+    int coins;
+    int events;
+
+};
+
+struct bonus{
+
+    int pv;
+    int stamina;
+    int coins;
+    int events;
+
+};
+
 /* FONCTION AFFICHAGE DÉBUT DE JEU */
 void start_display(){
 
@@ -55,7 +73,7 @@ int quests_or_enigmes(){
 
     srand(time(NULL));
 
-/* Contient la valeur aléatoire entre 0 & 5 */
+    /* Contient la valeur aléatoire entre 0 & 5 */
 
     quests_randomizer = rand() % 6;
 
@@ -99,13 +117,35 @@ int random_value(){
 }
 
 /* FONCTION QUI VÉRIFIE LA RÉPONSE PAR RAPPORT À LA VALEUR ALÉATOIRE ET LE CHOIX DE RÉPONSE DU JOUEUR */
-int isCorrect(int random_value, int player_answer, int answers_tab[]){
+int isCorrect_enigmes(int random_value, int player_answer, int answers_tab[]){
 
     /* On compare la réponse du joueur avec les réponses contenue dans le tableau answer_tab de la ligne déterminée par random_value */
 
 
     if(player_answer == answers_tab[random_value]){
 
+        printf("Bonne réponse!\n");
+        // Il faut que pour les augmentations de stats ce soit fais dans un fichier pour qu'il soit modifiable sans avoir à toucher au code
+
+        return 1;
+    
+    }else{
+
+        printf("Mauvaise réponse!\n");
+        return 0;
+    }
+
+
+}
+
+int isCorrect_quests(int random_value, int player_answer, int answers_tab[]){
+
+    /* On compare la réponse du joueur avec les réponses contenue dans le tableau answer_tab de la ligne déterminée par random_value */
+
+
+    if(player_answer == answers_tab[random_value]){
+
+        
         return 1;
     
     }else{
@@ -239,7 +279,8 @@ void loadAnswers(const char* answer_file, int answer_array[]){
 
     FILE *reading_answers = fopen(answer_file, "r");
 
-    while(fgets(answer_array[i], TAB_SIZE, reading_answers) != NULL){
+    while(fscanf(reading_answers, "%d", &answer_array[i]) == 1){
+        //fscanf(answer_array[i], TAB_SIZE, reading_answers) == 1)
 
         i++;
 
@@ -252,6 +293,52 @@ void loadAnswers(const char* answer_file, int answer_array[]){
 
     fclose(reading_answers);
 
+}
+
+struct malus load_malus(const char *file_name){  
+    
+    struct malus malus_who;
+    malus_who.pv = 0;
+    malus_who.stamina = 0;
+    malus_who.coins = 0;
+    malus_who.events = 0;
+
+    /* Au lieu d'intialiser à 0 à la main, possibilité de faire memset de struct player sizeof(struct) */
+
+    FILE *malus_read = fopen(file_name, "r");
+    
+    char tab[255];
+    fgets(tab, TAB_SIZE, malus_read);
+    tab[strcspn(tab, "\n")] = '\0';
+    sscanf(tab, "HP : %d STAMINA : %d COINS : %d EVENTS : %d", &malus_who.pv, &malus_who.stamina, &malus_who.coins, &malus_who.events);
+    /* Possible de faire pareil pour enregistrer les énigmes dans un tableau de char 2D puis sscanf(tab, "%s %s", &tab[0], &tab[1] PAR EXEMPLE) */
+
+    fclose(malus_read);
+    
+    return malus_who;
+}
+
+struct bonus load_bonus(const char *file_name){  
+    
+    struct bonus bonus_who;
+    bonus_who.pv = 0;
+    bonus_who.stamina = 0;
+    bonus_who.coins = 0;
+    bonus_who.events = 0;
+
+    /* Au lieu d'intialiser à 0 à la main, possibilité de faire memset de struct player sizeof(struct) */
+
+    FILE *bonus_read = fopen(file_name, "r");
+    
+    char tab[255];
+    fgets(tab, TAB_SIZE, bonus_read);
+    tab[strcspn(tab, "\n")] = '\0';
+    sscanf(tab, "HP : %d STAMINA : %d COINS : %d EVENTS : %d", &bonus_who.pv, &bonus_who.stamina, &bonus_who.coins, &bonus_who.events);
+    /* Possible de faire pareil pour enregistrer les énigmes dans un tableau de char 2D puis sscanf(tab, "%s %s", &tab[0], &tab[1] PAR EXEMPLE) */
+
+    fclose(bonus_read);
+    
+    return bonus_who;
 }
 
 /* FONCTION QUI INITIALISE LES STATS DU JOUEUR EN FONCTION DE CELLES ENREGISTRÉES DANS LE FICHIER */
@@ -338,6 +425,9 @@ int main(){
     int quest_or_enigme = 0;
     int enigmesAnswers[TAB_SIZE];
     int questsAnswers[TAB_SIZE];
+    int linesCount = 0; // Faire une variable pour chaque ? énigmes et quêtes?
+    int player_choice = -1;
+    int bonus_tab[TAB_SIZE], malus_tab[TAB_SIZE];
     
     /* FONCTION AFFICHAGE DÉBUT DE JEU & RÈGLES */
     start_display();
@@ -345,6 +435,8 @@ int main(){
 
     struct player player_one = load_player("player_one.save");
     struct player player_two = load_player("player_two.save");
+    struct malus malus_player = load_malus("enigme_malus.save");
+    struct bonus bonus_player = load_bonus("enigme_bonus.save");
 
     is_gameOver = isGameOver(player_one);
 
@@ -361,12 +453,12 @@ int main(){
         
         printf("Joueur 1, voici vos statistiques :\n\n");
         player_stats_display(player_one);
-        sleep(2);
+        //sleep(2);
 
         /* METTRE UN IF MULTIJOUEUR */
         printf("Joueur 2, voici vos statistiques :\n\n");
         player_stats_display(player_two);
-        sleep(1);
+        //sleep(1);
         
         randomValue_stock = random_value();
 
@@ -380,10 +472,13 @@ int main(){
             load_enigmes("enigmes.save", randomValue_stock);
             sleep(1);
             load_enigmesChoices("enigmes_choices.save", randomValue_stock);
-            sleep(1);
+
             loadAnswers("enigmes_answers.save", enigmesAnswers);
-            // Appeler fonction isCorrect.
-            player_answer();
+            load_bonus("enigme_bonus.save");
+            load_malus("enigme_malus.save");
+
+            player_choice = player_answer();
+            isCorrect_enigmes(randomValue_stock, player_choice, enigmesAnswers);
 
         }else if(quest_or_enigme == IS_QUEST){
 
