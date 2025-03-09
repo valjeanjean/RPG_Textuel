@@ -99,59 +99,20 @@ int random_value(){
 }
 
 /* FONCTION QUI VÉRIFIE LA RÉPONSE PAR RAPPORT À LA VALEUR ALÉATOIRE ET LE CHOIX DE RÉPONSE DU JOUEUR */
-int isCorrect(int random_value){
+int isCorrect(int random_value, int player_answer, int answers_tab[]){
 
-    int stock_answer = 0;
-    stock_answer = player_answer();
+    /* On compare la réponse du joueur avec les réponses contenue dans le tableau answer_tab de la ligne déterminée par random_value */
 
-    switch (random_value)
-    {
-    case 1:
-    
-        if(1);
+
+    if(player_answer == answers_tab[random_value]){
 
         return 1;
     
-    case 2:
-        
-        return 2;
-    
-    case 3:
-        
-        return 3;
-    
-    case 4:
-        
-        return 4;
-        
-    case 5:
-        
-        return 5;
-        
-    case 6:
-        
-        return 6;
-        
-    case 7:
-        
-        return 7;
-        
-    case 8:
-        
-        return 8;
-        
-    case 9:
-        
-        return 9;
-        
-    case 10:
-        
-        return 10;
-        
-        
-    default:
-        break;
+    }else{
+
+        return 0;
     }
+
 
 }
 
@@ -170,7 +131,7 @@ void load_Quests(const char *quest_file, int rand_quest_value){
     while(fgets(quests_array[i], TAB_SIZE, reading_quests) != NULL){
 
         i++;
-
+        /* Rajouter une variable "compteur", pour rendre le programme totalement dynamique ? */
         if(i > MAX_LINES){
 
             break;
@@ -271,6 +232,28 @@ void load_enigmesChoices(const char *quest_file, int rand_quest_value){
     fclose(reading_enigmesChoices);
 }
 
+/* FONCTION QUI ENREIGSTRE LES RÉPONSES DANS UN TABLEAU D'ENTIERS*/
+void loadAnswers(const char* answer_file, int answer_array[]){
+
+    int i = 0;
+
+    FILE *reading_answers = fopen(answer_file, "r");
+
+    while(fgets(answer_array[i], TAB_SIZE, reading_answers) != NULL){
+
+        i++;
+
+        if(i > MAX_LINES){
+
+            break;
+        }
+        
+    }
+
+    fclose(reading_answers);
+
+}
+
 /* FONCTION QUI INITIALISE LES STATS DU JOUEUR EN FONCTION DE CELLES ENREGISTRÉES DANS LE FICHIER */
 struct player load_player(const char *file_name){  
     
@@ -353,6 +336,8 @@ int main(){
     char score_infos[TAB_SIZE];
     int randomValue_stock = -1;
     int quest_or_enigme = 0;
+    int enigmesAnswers[TAB_SIZE];
+    int questsAnswers[TAB_SIZE];
     
     /* FONCTION AFFICHAGE DÉBUT DE JEU & RÈGLES */
     start_display();
@@ -387,11 +372,17 @@ int main(){
 
         quest_or_enigme = quests_or_enigmes();
 
+
+        /* Faire un scanf ou fscanf des lignes pairs puisque les réponses sont exclusivement sur les lignes pairs pour les énigmes (dans le fichier enigmes_answers.save) */
+        /* Stocker cette valeur dans une variable et la comparer à la variable atoi de la réponse du joueur */
         if(quest_or_enigme == IS_ENIGME){
 
             load_enigmes("enigmes.save", randomValue_stock);
             sleep(1);
             load_enigmesChoices("enigmes_choices.save", randomValue_stock);
+            sleep(1);
+            loadAnswers("enigmes_answers.save", enigmesAnswers);
+            // Appeler fonction isCorrect.
             player_answer();
 
         }else if(quest_or_enigme == IS_QUEST){
@@ -404,6 +395,8 @@ int main(){
             sleep(1);
             load_questsChoices("quests_choice.save", randomValue_stock);
             sleep(1);
+            // Adapter loadAnswers pour les quêtes ?
+            // Puis appeler fonction isCorrect.
             player_answer();
         }
 
