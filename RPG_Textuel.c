@@ -505,7 +505,6 @@ int main(){
                 player_one.coins += bonus_player.coins;
                 printf("Vous gagnez %d pièces.\n", bonus_player.coins);
 
-
                 player_two.pv += bonus_player.pv;
                 player_two.stamina += bonus_player.pv;
                 player_two.coins += bonus_player.coins;
@@ -544,7 +543,6 @@ int main(){
             player_answer();
             
         }
-
 
         if(isLostStats(player_one) == 1){
             

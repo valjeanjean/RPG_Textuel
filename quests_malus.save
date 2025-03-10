@@ -1,0 +1,15 @@
+HP : -20 STAMINA : -20 COINS : -20 EVENTS : 0 // QUÊTE 1 S'il combat (Il se fait salement amoché)
+HP : 0 STAMINA : 0 COINS : -15 EVENTS : 0 // QUÊTE 2 S'il fuit (Vous perdez en réputation)
+HP : 0 STAMINA : 0 COINS : 0 EVENTS : 0 // QUÊTE 3 S'il choisit de chercher un autre chemin (Il trouve un autre chemin sans encombres)
+HP : -15 STAMINA : -15 COINS : -10 EVENTS : 0 // QUÊTE 4 S'il décide d'aller voir (IL tombe sur un esprit qui lui vole ses stats)
+HP : 0 STAMINA : -5 COINS : 0 EVENTS : 0 // QUÊTE 5 S'il ignore (Rien ne se passe...)
+HP : 0 STAMINA : -10 COINS : -15 EVENTS : 0 // QUÊTE 6 Si il fuit (D'autres aventuriers vous ont vu fuir et vous voient maintenant comme un lâche)
+HP : 0 STAMINA : 5 COINS : -40 EVENTS : 0 // QUÊTE 7 S'il reste prudent (Vous les piétinez en partant, vous prenez une amende)
+HP : -30 STAMINA : -30 COINS : -30 EVENTS : 0 // QUÊTE 8 S'il l'emporte (Le miroir tente de prendre possession de vous, vous perdez des stats)
+HP : -15 STAMINA : -20 COINS : -20 EVENTS : 0 // QUÊTE 9 S'il explore (Maison hantée, vous vous faitez attaqué par des fantômes)
+HP : 0 STAMINA : 0 COINS : 0 EVENTS : 0 // QUÊTE 10 S'il ne l'ouvre pas (L'aventurier continue son chemin...)
+
+sscanf(tab, "HP : %d STAMINA : %d COINS : %d EVENTS : %d", &variableHP, &variableSTAM, &variableCOINS, &variableEVENTS);
+
+Il faut donc après la proposition de la question, printf le coût en stamina 
+de ce fichier.
