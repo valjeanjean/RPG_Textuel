@@ -46,3 +46,8 @@ Proposer une liste de personnages jouables
 
 But du rpg c'est de faire en sorte que le client (celui qui nous achète le jeu et non le joueur qui jouera au jeu) puisse modifier
 certaines choses, comme le nombre de PV, stamina ou les pièces qu'on gagne avec les récompenses des différentes missions.
+
+Difficultés rencontrées : 
+
+- Gestion de multiples fichiers pour que le client n'ait juste qu'à modifier des phrases pour qu'il puisse personnalisé le jeu
+- Organisation en dossiers du projet

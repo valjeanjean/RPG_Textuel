@@ -14,6 +14,8 @@
 #define IS_QUEST 1
 #define IS_ENIGME 2
 #define PLAYER_CHOICE_TAB 1
+#define RUN 1
+#define FIGHT 2
 
 struct player{
 
@@ -73,7 +75,8 @@ int quests_or_enigmes(){
 
     srand(time(NULL));
 
-    /* Contient la valeur aléatoire entre 0 & 5 */
+             /* Contient la valeur aléatoire entre 0 & 5 */
+    /* Soit 1 chance sur 2 de tomber sur une énigme et inversement */
 
     quests_randomizer = rand() % 6;
 
@@ -97,8 +100,6 @@ int player_answer(){
     answer_stock = atoi(tab);
     //printf("La réponse du joueur est %d\n", answer_stock);
     return answer_stock;
-
-
 }
 
 /* FONCTION GÉNÉRANT UNE VALEUR ALÉATOIRE */
@@ -137,30 +138,34 @@ int isCorrect_enigmes(int random_value, int player_answer, int answers_tab[]){
 
 }
 
-int isCorrect_quests(int random_value, int player_answer, int answers_tab[]){
+int isCorrect_quests(int random_value, int player_answer){
 
     /* On compare la réponse du joueur avec les réponses contenue dans le tableau answer_tab de la ligne déterminée par random_value */
 
+    if(player_answer != 1 || player_answer != 2){
 
-    if(player_answer == answers_tab[random_value]){
 
-        
-        return 1;
-    
-    }else{
-
-        return 0;
     }
 
+    if(player_answer == RUN){
+
+
+        return RUN;
+    
+    }else if(player_answer == FIGHT){
+
+
+        return FIGHT;
+    }
 
 }
 
 /* FONCTION ENREGISTREMENT DES QUÊTES DANS UN TABLEAU */
-void load_Quests(const char *quest_file, int rand_quest_value){
+void load_event(const char *event_file, int rand_event_value){
 
     int i = 0;
 
-    FILE *reading_quests = fopen(quest_file, "r");
+    FILE *reading_quests = fopen(event_file, "r");
 
     char quests_array[TAB_SIZE][TAB_SIZE];
 
@@ -181,12 +186,16 @@ void load_Quests(const char *quest_file, int rand_quest_value){
         
     }
 
-    printf("%s\n", quests_array[rand_quest_value]);
+    printf("%s\n", quests_array[rand_event_value]);
     fclose(reading_quests);
 }
 
+void load_Quests(const char *quest_file, int rand_quest_value){
+    load_event(quest_file,rand_quest_value);
+}
+
 /* FONCTION ENREGISTREMENT DES CHOIX DE QUÊTES DANS UN TABLEAU */
-void load_questsChoices(const char *quest_file, int rand_quest_value){
+void load_questsChoices(const char *quest_file, int rand_quest_value, int stamina_cost_quests){
 
     int i = 0;
 
@@ -211,7 +220,7 @@ void load_questsChoices(const char *quest_file, int rand_quest_value){
         
     }
 
-    printf("%s\n", questsChoices_array[rand_quest_value]);
+    printf("%s\n\033[1;34mCOÛT : %d STAMINA\033[0m\n\n", questsChoices_array[rand_quest_value], stamina_cost_quests);
     fclose(reading_questsChoices);
 }
 
@@ -272,7 +281,7 @@ void load_enigmesChoices(const char *quest_file, int rand_quest_value){
     fclose(reading_enigmesChoices);
 }
 
-/* FONCTION QUI ENREIGSTRE LES RÉPONSES DANS UN TABLEAU D'ENTIERS*/
+/* FONCTION QUI ENREIGSTRE LES RÉPONSES DES ÉNIGMES DANS UN TABLEAU D'ENTIERS */
 void loadAnswers(const char* answer_file, int answer_array[]){
 
     int i = 0;
@@ -312,7 +321,7 @@ struct malus load_malus(const char *file_name, int expected_line){
 
     int i;
     /* expected_line + 1 car randomValue_stock est un chiffre compris entre 0 & 9, on veut lire 10 lignes donc + 1 */
-    for(i = 1; i < expected_line + 1; i++){
+    for(i = 1; i < expected_line + 2; i++){
 
         fgets(buf, ARRAY, malus_read);
     }
@@ -346,7 +355,7 @@ struct bonus load_bonus(const char *file_name, int expected_line){
     
     int i;
     /* expected_line + 1 car randomValue_stock est un chiffre compris entre 0 & 9, on veut lire 10 lignes donc + 1 */
-    for(i = 1; i < expected_line + 1; i++){
+    for(i = 1; i < expected_line; i++){
 
         fgets(tab, ARRAY, bonus_read);
     }
@@ -447,6 +456,7 @@ int main(){
     int linesCount = 0; // Faire une variable pour chaque ? énigmes et quêtes?
     int player_choice = -1;
     int bonus_tab[TAB_SIZE], malus_tab[TAB_SIZE];
+    char scenario_array[ARRAY];
     
     /* FONCTION AFFICHAGE DÉBUT DE JEU & RÈGLES */
     start_display();
@@ -467,26 +477,29 @@ int main(){
         /* SECTION ALÉATOIRE */
         //randomValue_stock = random_value();
         //printf("Valeur aléatoire est : %d\n", randomValue_stock);
-        
+        sleep(0.5);
         printf("Joueur 1, voici vos statistiques :\n\n");
         player_stats_display(player_one);
-        //sleep(2);
+        sleep(0.5);
         
         /* METTRE UN IF MULTIJOUEUR */
         printf("Joueur 2, voici vos statistiques :\n\n");
         player_stats_display(player_two);
-        //sleep(1);
+        sleep(0.5);
         
+        /* Déplacer les struct malus et bonus dans énigme, le mettre dans if énigme et réutiliser ces structs avec paramètres différents dans is_quests ? */
         randomValue_stock = random_value();
-        struct malus malus_player = load_malus("enigme_malus.save", randomValue_stock);
-        struct bonus bonus_player = load_bonus("enigme_bonus.save", randomValue_stock);
-
+        printf("Valeur de randomValue_stock  = %d\n\n", randomValue_stock);
+        
         quest_or_enigme = quests_or_enigmes();
-
+        
         /* Faire un scanf ou fscanf des lignes pairs puisque les réponses sont exclusivement sur les lignes pairs pour les énigmes (dans le fichier enigmes_answers.save) */
         /* Stocker cette valeur dans une variable et la comparer à la variable atoi de la réponse du joueur */
-
+        
         if(quest_or_enigme == IS_ENIGME){
+            
+            struct malus malus_player = load_malus("enigme_malus.save", randomValue_stock);
+            struct bonus bonus_player = load_bonus("enigme_bonus.save", randomValue_stock);
 
             load_enigmes("enigmes.save", randomValue_stock);
             sleep(1);
@@ -534,13 +547,52 @@ int main(){
             /* On peut donc assigner une variable à la valeur correspondante, qui donne les récompenses, peut être utilisé un switch */
             /* Faire une fonction avec un switch avec un paramètre (randomValue_stock), qui renvoie une valeur entre 1 et 10 */
 
+            struct malus malus_player = load_malus("quests_malus.save", randomValue_stock);
+            struct bonus bonus_player = load_bonus("quests_bonus.save", randomValue_stock);
+
             load_Quests("quests.save", randomValue_stock);
             sleep(1);
-            load_questsChoices("quests_choice.save", randomValue_stock);
+            load_questsChoices("quests_choice.save", randomValue_stock, malus_player.stamina);
             sleep(1);
             // Adapter loadAnswers pour les quêtes ?
             // Puis appeler fonction isCorrect.
-            player_answer();
+            player_choice = player_answer();
+
+            if(isCorrect_quests(randomValue_stock, player_choice) == RUN){
+            
+                player_one.pv -= bonus_player.pv;
+                printf("Vous perdez %d PV!\n", bonus_player.pv);
+                player_one.stamina -= bonus_player.stamina;
+                printf("Vous perdez %d de STAMINA!\n", bonus_player.stamina);
+                player_one.coins -= bonus_player.coins;
+                printf("Vous perdez %d pièces!\n", bonus_player.coins);
+
+                player_two.pv -= bonus_player.pv;
+                player_two.stamina -= bonus_player.pv;
+                player_two.coins -= bonus_player.coins;
+
+                player_one.events++;
+                player_two.events++;
+            
+            }else if(isCorrect_quests(randomValue_stock, player_choice) == FIGHT){
+            
+                player_one.pv += bonus_player.pv;
+                printf("Vous gagnez %d PV.\n", bonus_player.pv);
+
+                player_one.stamina += bonus_player.stamina;
+                printf("Vous gagnez %d de STAMINA.\n", bonus_player.stamina);
+
+                player_one.coins += bonus_player.coins;
+                printf("Vous gagnez %d pièces.\n", bonus_player.coins);
+
+                player_two.pv += bonus_player.pv;
+                player_two.stamina += bonus_player.pv;
+                player_two.coins += bonus_player.coins;
+
+                player_one.events++;
+                player_two.events++;
+
+            }
             
         }
 
