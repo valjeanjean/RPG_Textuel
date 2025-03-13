@@ -33,15 +33,7 @@ IF(player_answer_atoi == TAB_ANSWER[random_value]){
 }
 -----------------------------------------------------------------------------------
 
-Idées jeu : 
-
-Proposer une liste de personnages jouables
-
-3 choix qui spawn de manière aléatoire :
-
-    - Énigme (Peut donner des récompenses)
-    - PvE
-    - Objets qui augmente les stats
+FAIRE VARIABLE COMPTEUR POUR RENDRE LE JEU TOTALEMENT DYNAMIQUE
 
 
 But du rpg c'est de faire en sorte que le client (celui qui nous achète le jeu et non le joueur qui jouera au jeu) puisse modifier
@@ -51,3 +43,5 @@ Difficultés rencontrées :
 
 - Gestion de multiples fichiers pour que le client n'ait juste qu'à modifier des phrases pour qu'il puisse personnalisé le jeu
 - Organisation en dossiers du projet
+
+

@@ -47,23 +47,23 @@ struct bonus{
 /* FONCTION AFFICHAGE DÉBUT DE JEU */
 void start_display(){
 
-    printf("|-------------------------------------|\n");
-    printf("|-------------RPG Textuel-------------|\n\n");
+    printf("\033[93m|-------------------------------------|\033[0m\n");
+    printf("\033[93m|-------------RPG Textuel-------------|\033[0m\n\n");
 }
 
 /* GAME OVER */
 void gameOver_display(){
 
-    printf("Vous avez perdu ! Soyez plus concentré(s) la prochaine fois!\n\n");
-    printf("|----------------------------------|\n");
-    printf("              GAME OVER\n");
-    printf("|----------------------------------|\n");
-    printf("|----------------------------------|\n");
+    printf("\033[93mVous avez perdu ! Soyez plus concentré(s) la prochaine fois!\n\n");
+    printf("\033[93m|----------------------------------|\033[0m\n");
+    printf("              \033[93mGAME OVER\033[0m\n");
+    printf("\033[93m|----------------------------------|\033[0m\n");
+    printf("\033[93m|----------------------------------|\033[0m\n");
 }
 
 void getReady_display(){
 
-    printf("Vous vous apprêtez à rentrer!\n\n");
+    printf("\033[90mVous vous apprêtez à rentrer!\033[0m\n\n");
 }
 
 /* FONCTION DÉTERMINANT SI LE JOUEUR VA VOIR S'AFFICHER UNE QUÊTE OU UNE ÉNIGME*/
@@ -113,7 +113,7 @@ int random_value(){
 
     /* Contient la valeur aléatoire entre 0 & 9 */
 
-    quests_randomizer = rand() % 10; // Faire un compteur qui remplacera 10 (Si le compteur atteint 15, alors quests_randomizer = rand() % compteur_variable;)
+    quests_randomizer = rand() % 11; // Faire un compteur qui remplacera 10 (Si le compteur atteint 15, alors quests_randomizer = rand() % compteur_variable;)
 
     return quests_randomizer;
 }
@@ -142,26 +142,26 @@ int isCorrect_quests(int random_value, int player_answer){
 
     /* On compare la réponse du joueur avec les réponses contenue dans le tableau answer_tab de la ligne déterminée par random_value */
 
-    if(player_answer != 1 || player_answer != 2){
+    if(player_answer != 1 && player_answer != 2){
 
-
+        printf("Non reconnu.\n");
     }
 
-    if(player_answer == RUN){
+    if(player_answer == 1){
 
 
-        return RUN;
+        return 1;
     
-    }else if(player_answer == FIGHT){
+    }else if(player_answer == 2){
 
 
-        return FIGHT;
+        return 2;
     }
 
 }
 
 /* FONCTION ENREGISTREMENT DES QUÊTES DANS UN TABLEAU */
-void load_event(const char *event_file, int rand_event_value){
+void load_event(const char *event_file, int rand_event_value, int lines_count){
 
     int i = 0;
 
@@ -175,6 +175,8 @@ void load_event(const char *event_file, int rand_event_value){
     while(fgets(quests_array[i], TAB_SIZE, reading_quests) != NULL){
 
         i++;
+        lines_count++;
+
         /* Rajouter une variable "compteur", pour rendre le programme totalement dynamique ? */
         if(i > MAX_LINES){
 
@@ -186,12 +188,12 @@ void load_event(const char *event_file, int rand_event_value){
         
     }
 
-    printf("%s\n", quests_array[rand_event_value]);
+    printf("\033[34m%s\033[0m\n\n", quests_array[rand_event_value]);
     fclose(reading_quests);
 }
 
-void load_Quests(const char *quest_file, int rand_quest_value){
-    load_event(quest_file,rand_quest_value);
+void load_Quests(const char *quest_file, int rand_quest_value, int lines_count){
+    load_event(quest_file,rand_quest_value, lines_count);
 }
 
 /* FONCTION ENREGISTREMENT DES CHOIX DE QUÊTES DANS UN TABLEAU */
@@ -220,7 +222,7 @@ void load_questsChoices(const char *quest_file, int rand_quest_value, int stamin
         
     }
 
-    printf("%s\n\033[1;34mCOÛT : %d STAMINA\033[0m\n\n", questsChoices_array[rand_quest_value], stamina_cost_quests);
+    printf("\033[36m%s\033[0m\n\033[1;34mCOÛT : %d STAMINA\033[0m\n\n", questsChoices_array[rand_quest_value], stamina_cost_quests);
     fclose(reading_questsChoices);
 }
 
@@ -249,7 +251,7 @@ void load_enigmes(const char *quest_file, int rand_quest_value){
         enigmes_array[i][strcspn(enigmes_array[i], "\n")] = '\0';
     }
     
-    printf("%s\n", enigmes_array[rand_quest_value]);
+    printf("\033[34m%s\033[0m\n", enigmes_array[rand_quest_value]);
     fclose(reading_enigmes);
 }
 
@@ -277,7 +279,7 @@ void load_enigmesChoices(const char *quest_file, int rand_quest_value){
         enigmesChoices_array[i][strcspn(enigmesChoices_array[i], "\n")] = '\0';
     }
 
-    printf("%s\n", enigmesChoices_array[rand_quest_value]);
+    printf("\033[36m%s\033[0m\n", enigmesChoices_array[rand_quest_value]); // Bleu ciel
     fclose(reading_enigmesChoices);
 }
 
@@ -421,14 +423,14 @@ int isLostStats(struct player player_who){
 /* FONCTION RAPPEL RÈGLES */
 void rules(){
     
-    printf("Bienvenue dans CLI Adventure, un jeu de quêtes et d'énigmes!\n");
+    printf("\033[37mBienvenue dans CLI Adventure, un jeu de quêtes et d'énigmes!\033[0m\n");
     sleep(1.5);
-    printf("Vous devrez réaliser des 'missions', pour augmenter vos stats et gagner des objets!\n");
+    printf("\033[37mVous devrez réaliser des 'missions', pour augmenter vos stats et gagner des objets!\033[0m\n");
     sleep(2);
-    printf("Vous devrez parfois répondre à des énigmes, avec des récompenses à la clé!\n\n");
+    printf("\033[37mVous devrez parfois répondre à des énigmes, avec des récompenses à la clé!\033[0m\n\n");
     sleep(1);
-    printf("N'oubliez pas que si vous jouez à 2, les malus et bonus sont attribués aux 2 joueurs\n");
-    printf("Attention, des bêtes défendent souvent les artefacts, soyez prudent.\n\n");
+    printf("\033[37mN'oubliez pas que si vous jouez à 2, les malus et bonus sont attribués aux 2 joueurs\033[0m\n");
+    printf("\033[37mAttention, des bêtes défendent souvent les artefacts, soyez prudent.\033[0m\n\n");
     sleep(2);
 }
 
@@ -436,10 +438,10 @@ void rules(){
 /* FONCTION AFFICHAGE STATS JOUEUR */
 void player_stats_display(struct player first_player){
     
-    printf("HP : %d\n", first_player.pv);
-    printf("STAMINA : %d\n", first_player.stamina);
-    printf("MONNAIE : %d\n", first_player.coins);
-    printf("ÉVÈNEMENTS : %d\n\n", first_player.events);
+    printf("\033[31mHP : %d\033[0m\n", first_player.pv);
+    printf("\033[34mSTAMINA : %d\033[0m\n", first_player.stamina);
+    printf("\033[33mMONNAIE : %d\033[0m\n", first_player.coins);
+    printf("\033[32mÉVÈNEMENTS : %d\033[0m\n\n", first_player.events);
 }
 
 int main(){
@@ -456,7 +458,8 @@ int main(){
     int linesCount = 0; // Faire une variable pour chaque ? énigmes et quêtes?
     int player_choice = -1;
     int bonus_tab[TAB_SIZE], malus_tab[TAB_SIZE];
-    char scenario_array[ARRAY];
+    char scenario_array[ARRAY]; // Inutile?
+    int file_lines = 0;
     
     /* FONCTION AFFICHAGE DÉBUT DE JEU & RÈGLES */
     start_display();
@@ -477,19 +480,19 @@ int main(){
         /* SECTION ALÉATOIRE */
         //randomValue_stock = random_value();
         //printf("Valeur aléatoire est : %d\n", randomValue_stock);
-        sleep(0.5);
-        printf("Joueur 1, voici vos statistiques :\n\n");
+        sleep(1);
+        printf("\033[95mJoueur 1, voici vos statistiques :\033[0m\n\n");
         player_stats_display(player_one);
-        sleep(0.5);
+        sleep(2);
         
         /* METTRE UN IF MULTIJOUEUR */
-        printf("Joueur 2, voici vos statistiques :\n\n");
+        printf("\033[95mJoueur 2, voici vos statistiques :\033[0m\n\n");
         player_stats_display(player_two);
-        sleep(0.5);
+        sleep(1);
         
         /* Déplacer les struct malus et bonus dans énigme, le mettre dans if énigme et réutiliser ces structs avec paramètres différents dans is_quests ? */
         randomValue_stock = random_value();
-        printf("Valeur de randomValue_stock  = %d\n\n", randomValue_stock);
+        //printf("Valeur de randomValue_stock  = %d\n\n", randomValue_stock);
         
         quest_or_enigme = quests_or_enigmes();
         
@@ -512,32 +515,33 @@ int main(){
             if(isCorrect_enigmes(randomValue_stock, player_choice, enigmesAnswers) == 1){
 
                 player_one.pv += bonus_player.pv;
-                printf("Vous gagnez %d PV.\n", bonus_player.pv);
+                printf("\033[31mVous gagnez %d PV.\033[0m\n", bonus_player.pv);
                 player_one.stamina += bonus_player.stamina;
-                printf("Vous gagnez %d de STAMINA.\n", bonus_player.stamina);
+                printf("\033[34mVous gagnez %d de STAMINA.\033[0m\n", bonus_player.stamina);
                 player_one.coins += bonus_player.coins;
-                printf("Vous gagnez %d pièces.\n", bonus_player.coins);
+                printf("\033[33mVous gagnez %d pièces.\033[0m\n\n", bonus_player.coins);
 
                 player_two.pv += bonus_player.pv;
-                player_two.stamina += bonus_player.pv;
+                player_two.stamina += bonus_player.stamina;
                 player_two.coins += bonus_player.coins;
 
                 player_one.events++;
                 player_two.events++;
+                sleep(2);
                 
             }else{
 
                 player_one.pv -= bonus_player.pv;
-                printf("Vous perdez %d PV!\n", bonus_player.pv);
+                printf("\033[31mVous perdez %d PV!\033[0m\n", malus_player.pv);
                 player_one.stamina -= bonus_player.stamina;
-                printf("Vous perdez %d de STAMINA!\n", bonus_player.stamina);
+                printf("\033[34mVous perdez %d de STAMINA!\033[0m\n", malus_player.stamina);
                 player_one.coins -= bonus_player.coins;
-                printf("Vous perdez %d pièces!\n", bonus_player.coins);
+                printf("\033[33mVous perdez %d pièces!\033[0m\n\n", malus_player.coins);
 
-                player_two.pv -= bonus_player.pv;
-                player_two.stamina -= bonus_player.pv;
-                player_two.coins -= bonus_player.coins;
-
+                player_two.pv -= malus_player.pv;
+                player_two.stamina -= malus_player.stamina;
+                player_two.coins -= malus_player.coins;
+                sleep(2);
                 
             }
 
@@ -550,7 +554,7 @@ int main(){
             struct malus malus_player = load_malus("quests_malus.save", randomValue_stock);
             struct bonus bonus_player = load_bonus("quests_bonus.save", randomValue_stock);
 
-            load_Quests("quests.save", randomValue_stock);
+            load_Quests("quests.save", randomValue_stock, file_lines);
             sleep(1);
             load_questsChoices("quests_choice.save", randomValue_stock, malus_player.stamina);
             sleep(1);
@@ -558,40 +562,47 @@ int main(){
             // Puis appeler fonction isCorrect.
             player_choice = player_answer();
 
-            if(isCorrect_quests(randomValue_stock, player_choice) == RUN){
+            if(isCorrect_quests(randomValue_stock, player_choice) == 2){
             
-                player_one.pv -= bonus_player.pv;
-                printf("Vous perdez %d PV!\n", bonus_player.pv);
-                player_one.stamina -= bonus_player.stamina;
-                printf("Vous perdez %d de STAMINA!\n", bonus_player.stamina);
-                player_one.coins -= bonus_player.coins;
-                printf("Vous perdez %d pièces!\n", bonus_player.coins);
+                load_event("malus_quests_scenario.save", randomValue_stock, file_lines);
 
-                player_two.pv -= bonus_player.pv;
-                player_two.stamina -= bonus_player.pv;
-                player_two.coins -= bonus_player.coins;
+                player_one.pv -= bonus_player.pv;
+                printf("\033[31mVous perdez %d PV!\033[0m\n", malus_player.pv);
+
+                player_one.stamina -= bonus_player.stamina;
+                printf("\033[34mVous perdez %d de STAMINA!\033[0m\n", malus_player.stamina);
+
+                player_one.coins -= bonus_player.coins;
+                printf("\033[33mVous perdez %d pièces!\033[0m\n\n", malus_player.coins);
+
+                player_two.pv -= malus_player.pv;
+                player_two.stamina -= malus_player.stamina;
+                player_two.coins -= malus_player.coins;
 
                 player_one.events++;
                 player_two.events++;
+                sleep(2);
+
+            }else if(isCorrect_quests(randomValue_stock, player_choice) == 1){
             
-            }else if(isCorrect_quests(randomValue_stock, player_choice) == FIGHT){
-            
+                load_event("bonus_quests_scenario.save", randomValue_stock, file_lines);
+
                 player_one.pv += bonus_player.pv;
-                printf("Vous gagnez %d PV.\n", bonus_player.pv);
+                printf("\033[31mVous gagnez %d PV.\033[0m\n", bonus_player.pv);
 
                 player_one.stamina += bonus_player.stamina;
-                printf("Vous gagnez %d de STAMINA.\n", bonus_player.stamina);
+                printf("\033[34mVous gagnez %d de STAMINA.\033[0m\n", bonus_player.stamina);
 
                 player_one.coins += bonus_player.coins;
-                printf("Vous gagnez %d pièces.\n", bonus_player.coins);
+                printf("\033[33mVous gagnez %d pièces.\033[0m\n\n", bonus_player.coins);
 
                 player_two.pv += bonus_player.pv;
-                player_two.stamina += bonus_player.pv;
+                player_two.stamina += bonus_player.stamina;
                 player_two.coins += bonus_player.coins;
 
                 player_one.events++;
                 player_two.events++;
-
+                sleep(2);
             }
             
         }
@@ -612,7 +623,7 @@ int main(){
             player_two.stamina--;
         }
 
-        //system("clear"); Gêne le printf de vérif de ma fonction loadQuests
+        system("clear");
         
         /* Actualisation stats joueur 1 fin de jeu */
         FILE *p1_score_update = fopen("player_one.save", "w");
